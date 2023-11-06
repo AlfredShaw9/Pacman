@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/style.css">
+  <script defer src="./scripts/script.js"></script>
+  <title>Pacman</title>
+</head>
+<body>
+  <section id="gameDisp">
+    <div id="playerBar">
+      <div id="lifeDisp">
+        LIVES:
+        <div>
+          <img id="life1" src="./assets/pmanlives.png">
+          <img id="life2" src="./assets/pmanlives.png">
+          <img id="life3" src="./assets/pmanlives.png">
+        </div>
+      </div>
+      <div id="fruitDisp">
+        <img id="chry" src="./assets/chry.png">
+        <img id="strb"src="./assets/strb.png">
+        <img id="orng"src="./assets/orng.png">
+        <img id="apple"src="./assets/apple.png">        
+      </div>
+      <div>SCORE:<span id="scoreDisp">000000</span></div>
+    </div>
+    <div class="gameBoard"></div>
+    <div id="quitBar">
+      <button id="quit">Quit</button>
+      <button id="loseLife">Lose Life</button>
+      <button id="start">Start</button>
+      <button id="reset">Reset</button>
+    </div>
+  </section>
+  <section id="startMenuDisp">
+
+  </section>
+</body>
+</html>

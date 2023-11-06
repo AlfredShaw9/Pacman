@@ -1,0 +1,148 @@
+* {
+  font-family: 'Press Start 2P';
+  image-rendering: pixelated;
+}
+
+:root {
+  --glow-colour: rgba(4, 138, 255, 0.482);
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  height: 100vh;
+  background-color: black;
+  color: white;
+  
+}
+
+#playerBar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 2px solid white;
+  height: 50px;
+  box-shadow: 0 0 20px 0 var(--glow-colour);
+  margin-bottom: 20px;
+}
+
+#playerBar img {
+  height: 30px;
+  margin: 0px 5px;
+}
+
+#lifeDisp, #fruitDisp {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#lifeDisp div {
+  display: flex;
+  flex-direction: row;
+}
+
+.gameBoard {
+  box-shadow: 0 0 20px 0 var(--glow-colour);
+  width: 700px;
+  border: 5px solid rgb(70, 215, 255);
+}
+
+#quitBar {
+  display: flex;
+  justify-content: center;
+}
+
+#quitBar button {
+  box-shadow: 0 0 20px 0 var(--glow-colour);
+  margin: 0px 10px;
+  color: white;
+  background-color: black;
+  margin-top: 20px;
+  width: 100%;
+  height: 40px;
+  font-size: 20px;
+}
+
+
+
+
+
+.gameBoard div {
+  border: none;
+  display: inline-block;
+  font-size: 5px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background-repeat: no-repeat;
+  background-size: contain;
+  box-sizing: border-box;
+}
+
+
+
+
+
+.gameBoard div.wall {
+  background-color: rgb(0, 0, 205);
+}
+
+.gameBoard div.ghostWall {
+  background-color: aqua;
+}
+
+.gameBoard div.pellet {
+  background-image: url('/assets/pellet.png');
+}
+
+.gameBoard div.powerUp {
+  background-image: url('/assets/powerup.png');
+}
+
+
+
+
+.gameBoard div.player {
+  background-image: url('/assets/pmanstatic.png');
+}
+
+.gameBoard div.pMvUp {
+  background-image: url('/assets/pmanup.gif');
+}
+
+.gameBoard div.pMvDown {
+  background-image: url('/assets/pmandown.gif');
+}
+
+.gameBoard div.pMvLeft {
+  background-image: url('/assets/pmanleft.gif');
+}
+
+.gameBoard div.pMvRight {
+  background-image: url('/assets/pmanright.gif');
+}
+
+
+
+
+.gameBoard div.ghostRed {
+  background-image: url('/assets/bnkyleft.gif');
+}
+
+.gameBoard div.gMvUpRed {
+  background-image: url('/assets/bnkyup.gif');
+}
+
+.gameBoard div.gMvDownRed {
+  background-image: url('/assets/bnkydown.gif');
+}
+
+.gameBoard div.gMvLeftRed {
+  background-image: url('/assets/bnkyleft.gif');
+}
+
+.gameBoard div.gMvRightRed {
+  background-image: url('/assets/bnkyright.gif');
+}
