@@ -18,6 +18,27 @@ body {
   
 }
 
+#container {
+  height: 100%;
+  position: relative;
+  /* background-color: aquamarine; */
+}
+
+/* #gameDisp {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+} */
+
+div.win {
+  color: yellow;
+  width: 150px;
+  height: 20px;
+  text-align: center;
+}
+
+
+
 #playerBar {
   display: flex;
   justify-content: space-around;
@@ -84,7 +105,7 @@ body {
 
 
 
-
+/*Board assets*/
 .gameBoard div.wall {
   background-color: rgb(0, 0, 205);
 }
@@ -103,7 +124,7 @@ body {
 
 
 
-
+/*Player sprites*/
 .gameBoard div.player {
   background-image: url('/assets/pmanstatic.png');
 }
@@ -126,7 +147,7 @@ body {
 
 
 
-
+/*Red ghost sprites*/
 .gameBoard div.ghostRed {
   background-image: url('/assets/bnkyleft.gif');
 }
@@ -145,4 +166,73 @@ body {
 
 .gameBoard div.gMvRightRed {
   background-image: url('/assets/bnkyright.gif');
+}
+
+
+
+/*Blue ghost sprites*/
+.gameBoard div.ghostBlue {
+  background-image: url('/assets/inkyleft.gif');
+}
+
+.gameBoard div.gMvUpBlue {
+  background-image: url('/assets/inkyup.gif');
+}
+
+.gameBoard div.gMvDownBlue {
+  background-image: url('/assets/inkydown.gif');
+}
+
+.gameBoard div.gMvLeftBlue {
+  background-image: url('/assets/inkyleft.gif');
+}
+
+.gameBoard div.gMvRightBlue {
+  background-image: url('/assets/inkyright.gif');
+}
+
+
+
+/*Pink ghost sprites*/
+.gameBoard div.ghostPink {
+  background-image: url('/assets/pnkyleft.gif');
+}
+
+.gameBoard div.gMvUpPink {
+  background-image: url('/assets/pnkyup.gif');
+}
+
+.gameBoard div.gMvDownPink {
+  background-image: url('/assets/pnkydown.gif');
+}
+
+.gameBoard div.gMvLeftPink {
+  background-image: url('/assets/pnkyleft.gif');
+}
+
+.gameBoard div.gMvRightPink {
+  background-image: url('/assets/pnkyright.gif');
+}
+
+
+
+/*Orange ghost sprites*/
+.gameBoard div.ghostOrange {
+  background-image: url('/assets/clydleft.gif');
+}
+
+.gameBoard div.gMvUpOrange {
+  background-image: url('/assets/clydup.gif');
+}
+
+.gameBoard div.gMvDownOrange {
+  background-image: url('/assets/clyddown.gif');
+}
+
+.gameBoard div.gMvLeftOrange {
+  background-image: url('/assets/clydleft.gif');
+}
+
+.gameBoard div.gMvRightOrange {
+  background-image: url('/assets/clydright.gif');
 }

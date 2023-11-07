@@ -6,12 +6,16 @@ const width = 19
 const height = 22
 const cellCount = width * height
 let currentPos = 237
-let ghDir
+// let ghDir
 let plDir
 let plDirLog
 let plNextCell
 let ghNextCell
 let moveTimer
+let current
+let ghMvHis
+let pickupTarget = 0
+let pickupCount = 0
 
 const map =
 [ '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@',
@@ -23,7 +27,7 @@ const map =
   '@', '-', '-', '-', '-', '@', '-', '-', '-', '@', '-', '-', '-', '@', '-', '-', '-', '-', '@',
   '@', '@', '@', '@', '-', '@', '@', '@', '-', '@', '-', '@', '@', '@', '-', '@', '@', '@', '@',
   '@', '@', '@', '@', '-', '@', '-', '-', '-', '-', '-', '-', '-', '@', '-', '@', '@', '@', '@',
-  '@', '@', '@', '@', '-', '@', '-', '@', '@', '^', '@', '@', '-', '@', '-', '@', '@', '@', '@',
+  '@', '@', '@', '@', '-', '@', '-', '@', '@', '@', '@', '@', '-', '@', '-', '@', '@', '@', '@',
   '-', '-', '-', '-', '-', '-', '-', '@', 'G', 'G', 'G', '@', '-', '-', '-', '-', '-', '-', '-',
   '@', '@', '@', '@', '-', '@', '-', '@', '@', '@', '@', '@', '-', '@', '-', '@', '@', '@', '@',
   '@', '@', '@', '@', '-', '@', '-', '-', '-', 'P', '-', '-', '-', '@', '-', '@', '@', '@', '@',
@@ -79,8 +83,10 @@ function placeItems() {
       cell.classList.add('ghostWall')
     } else if (mapDef === '-') {
       cell.classList.add('pellet')
+      pickupTarget += 1
     } else if (mapDef === 'O') {
       cell.classList.add('powerUp')
+      pickupTarget += 1
     }
   }
 }
@@ -93,12 +99,24 @@ function placeItems() {
 function charReset() {
   removePlayer()
   removeGhost('Red')
+  removeGhost('Blue')
+  removeGhost('Pink')
+  removeGhost('Orange')
   currentPos = 237
-  ghCurrentPos = 200
+  ghostPos.Red = 160
+  ghostPos.Blue = 161
+  ghostPos.Pink = 162
+  ghostPos.Orange = 163
   addPlayer()
   addGhost('Red')
+  addGhost('Blue')
+  addGhost('Pink')
+  addGhost('Orange')
   removeSprites()
   removeGhostSprites('Red')
+  removeGhostSprites('Blue')
+  removeGhostSprites('Pink')
+  removeGhostSprites('Orange')
   clearInterval(moveTimer)
 }
 
@@ -123,18 +141,47 @@ function gameReset() {
 //start game
 function startGame() {
   plDir = 'left'
-  ghDir = 'left'
+  ghDir.Red = 'left'
   moveTimer = setInterval(function() {
+    ghostHitChk()
     pickupChk('powerUp', 50)
     pickupChk('pellet', 10)
     playerMove()
+
+    getPath('Red', currentPos)
+    ghostMoveDecide('Red')
     ghostMove('Red')
+
+    getPath('Blue', currentPos - 2 * width)
+    ghostMoveDecide('Blue')
+    ghostMove('Blue')
+    
+    getPath('Pink', currentPos + 4)
+    ghostMoveDecide('Pink')
+    ghostMove('Pink')
+
+    getPath('Orange', currentPos + 4 * width)       
+    ghostMoveDecide('Orange')
+    ghostMove('Orange')
+
     ghostHitChk()
+
     scoreUpdater()
-  }, 150)
+  }, 300)
 }
 
+const ghostTarget = {
+  Red: currentPos,
+  Blue: currentPos - 2 * width,
+  Pink: currentPos + 4,
+  Orange: currentPos + 4 * width,
+}
 
+function ghostTargetVld(color) {
+  if (ghostTarget[color] < cellCount || ghostTarget[color] > cellCount) {
+    ghostTarget[color] = currentPos
+  }
+}
 
 
 //Add / remove player
@@ -195,17 +242,19 @@ function dirPress(evt){
     plDir = 'left'
   } else if (key === 'ArrowRight') {
     plDir = 'right'
-  //TESTING GHOST MOVMENT
-  }  else if (key === 'KeyW') {
-    ghDir = 'up'
-  } else if (key === 'KeyS') {
-    ghDir = 'down'
-  } else if (key === 'KeyA') {
-    ghDir = 'left'
-  } else if (key === 'KeyD') {
-    ghDir = 'right'
   }
 }
+//TESTING GHOST MOVMENT
+//   }  else if (key === 'KeyW') {
+//     ghDir.Red = 'up'
+//   } else if (key === 'KeyS') {
+//     ghDir.Red = 'down'
+//   } else if (key === 'KeyA') {
+//     ghDir.Red = 'left'
+//   } else if (key === 'KeyD') {
+//     ghDir.Red = 'right'
+//   }
+// }
 
 function playerMove() {
   removePlayer()
@@ -224,7 +273,6 @@ function playerMove() {
     teleCheck(plNextCell)
     wallChk()
   }
-
   addPlayer()
 }
 
@@ -249,53 +297,73 @@ function playerMove() {
 // redGhost.scared()
 /**THIS IS MY CLASS DEMONSTRATION, need to get to grips with these... */
 
-class Ghost {
-  constructor(ghostStartPosition, color) {
-    this.ghostStartPosition
-    this.color
-  }
-
+const ghostPos = {
+  Red: 160,
+  Blue: 161,
+  Pink: 162,
+  Orange: 163,
 }
 
-let ghCurrentPos = 200
+const ghDir = {
+  Red: 'left',
+  Blue: 'left',
+  Pink: 'left',
+  Orange: 'left',
+}
+
+function ghostMoveDecide(color) {
+  if (ghostPath[color][1] === ghostPos[color] - width) {
+    ghDir[color] = 'up'
+  } else if (ghostPath[color][1] === ghostPos[color] + width) {
+    ghDir[color] = 'down'
+  } else if (ghostPath[color][1] === ghostPos[color] - 1) {
+    ghDir[color] = 'left'
+  } else if (ghostPath[color][1] === ghostPos[color] + 1) {
+    ghDir[color] = 'right'
+  }
+}
 
 function addGhost(color){
-  cells[ghCurrentPos].classList.add(`ghost${color}`)
-  if (ghDir === 'up') {
-    cells[ghCurrentPos].classList.add(`gMvUp${color}`)
-  } else if (ghDir === 'down') {
-    cells[ghCurrentPos].classList.add(`gMvDown${color}`)
-  } else if (ghDir === 'left') {
-    cells[ghCurrentPos].classList.add(`gMvLeft${color}`)
-  } else if (ghDir === 'right') {
-    cells[ghCurrentPos].classList.add(`gMvRight${color}`)
+  // console.log(color)
+  // console.log(ghostPos.Red)
+  // console.log(ghostPos[color])
+  cells[ghostPos[color]].classList.add(`ghost${color}`)
+  if (ghDir[color] === 'up') {
+    cells[ghostPos[color]].classList.add(`gMvUp${color}`)
+  } else if (ghDir[color] === 'down') {
+    cells[ghostPos[color]].classList.add(`gMvDown${color}`)
+  } else if (ghDir[color] === 'left') {
+    cells[ghostPos[color]].classList.add(`gMvLeft${color}`)
+  } else if (ghDir[color] === 'right') {
+    cells[ghostPos[color]].classList.add(`gMvRight${color}`)
   }
 }
 
 function removeGhostSprites(color){
-  cells[ghCurrentPos].classList.remove(`gMvUp${color}`)
-  cells[ghCurrentPos].classList.remove(`gMvDown${color}`)
-  cells[ghCurrentPos].classList.remove(`gMvLeft${color}`)
-  cells[ghCurrentPos].classList.remove(`gMvRight${color}`)
+  cells[ghostPos[color]].classList.remove(`gMvUp${color}`)
+  cells[ghostPos[color]].classList.remove(`gMvDown${color}`)
+  cells[ghostPos[color]].classList.remove(`gMvLeft${color}`)
+  cells[ghostPos[color]].classList.remove(`gMvRight${color}`)
 }
 
 function removeGhost(color){
-  cells[ghCurrentPos].classList.remove(`ghost${color}`)
+  cells[ghostPos[color]].classList.remove(`ghost${color}`)
   removeGhostSprites(color)
 }
 
 function ghostMove(color) {
   removeGhost(color)
-  if (ghDir === 'up') {
-    ghNextCell = ghCurrentPos - width
-  } else if (ghDir === 'down') {
-    ghNextCell = ghCurrentPos + width
-  } else if (ghDir === 'left') {
-    ghNextCell = ghCurrentPos - 1
-  } else if (ghDir === 'right') {
-    ghNextCell = ghCurrentPos + 1
+  if (ghDir[color] === 'up') {
+    ghNextCell = ghostPos[color] - width
+  } else if (ghDir[color] === 'down') {
+    ghNextCell = ghostPos[color] + width
+  } else if (ghDir[color] === 'left') {
+    ghNextCell = ghostPos[color] - 1
+  } else if (ghDir[color] === 'right') {
+    ghNextCell = ghostPos[color] + 1
   }
-  ghCurrentPos = ghNextCell
+  
+  ghostPos[color] = ghNextCell
 
   addGhost(color)
 }
@@ -307,7 +375,7 @@ function ghostMove(color) {
 /**This will be an event that will occur after a timer. The location may be random or pre determined */
 /**EXTRA EXTRA EXTRA */
 /**use a basic AI to make the fruit move randomly around the board */
-
+// pickupCount = 189
 
 //player item pickup interaction
 /**remove pickup from board, add 10 to score for pellet.
@@ -316,10 +384,29 @@ if additional pickup is added during pickup duration, add 50 to score */
 function pickupChk(item, points) {
   if (cells[currentPos].classList.contains(`${item}`)){
     score += points
+    pickupCount += 1
+    console.log('count ' + pickupCount)
+    console.log('target ' + pickupTarget)
     cells[currentPos].classList.remove(`${item}`)
     if (item === 'powerUp') {
       //change ghost state and start a timer / refresh it if timer is already running
-      return
+    }
+    if (pickupCount === pickupTarget) {
+      pickupCount = 0
+      pickupTarget = 0
+      setTimeout(function() {
+        cells[218].innerText = 'You Win'
+      }, 500)
+      clearInterval(moveTimer)
+      setTimeout(function() {
+        charReset()
+        scoreUpdater()
+        placeItems()
+      }, 2000)
+      setTimeout(function() {
+        startGame()
+      }, 5000)
+      
     }
   }
 }
@@ -339,7 +426,7 @@ for 4th furit, add 700pts */
 
 //player enemy interaction
 function ghostHitChk() {
-  if (cells[currentPos].classList.contains('ghostRed')) {
+  if (cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
     ghostHit()
   }
 }
@@ -398,6 +485,179 @@ Initial pathfinding is just path to player. Will implement 2 on fastest path and
 /**Pathfinding takes locations based on player and other enemy location */
 
 
+const lastMv = {
+  Red: 0,
+  Blue: 0,
+  Pink: 0,
+  Orange: 0,
+}
+
+const ghostPath = {
+  Red: [],
+  Blue: [],
+  Pink: [],
+  Orange: [],
+}
+
+let pathHist = []
+let pathComplete = false
+
+function pathStepGen(color, target) {
+
+  const finish = target
+  console.log(current)
+
+  function hscore(dir) {
+    const dirloc = cells[dir].getBoundingClientRect()
+    const endloc = cells[finish].getBoundingClientRect()
+    const hscoreVal = Math.sqrt(Math.pow((endloc.x - dirloc.x),2) + Math.pow((endloc.y - dirloc.y),2))
+    return hscoreVal
+  }
+
+  function fscoreCalc(dir) {
+    let fscoredir
+    console.log('loc ' + dir)
+    if ( -1 > dir || dir > cellCount || cells[dir].classList.contains('wall') || dir === lastMv[color] || pathHist.includes(dir)) {
+      fscoredir = Infinity
+    } else {
+      fscoredir = hscore(dir)
+      console.log('locked out cell ' + lastMv[color])
+    }
+    return fscoredir
+  }
+
+  const up = current - width
+  const down = current + width
+  const left = current - 1
+  const right = current + 1
+  const fscoreUp = fscoreCalc(up)
+  const fscoreDown = fscoreCalc(down)
+  const fscoreLeft = fscoreCalc(left)
+  const fscoreRight = fscoreCalc(right)
+
+  // console.log('fscore up ' + fscoreUp)
+  // console.log('fscore down ' + fscoreDown)
+  // console.log('fscore left ' + fscoreLeft)
+  // console.log('fscore right ' + fscoreRight)
+
+  const ans = Math.min(fscoreUp, fscoreDown, fscoreLeft, fscoreRight)
+  // console.log(ans)
+
+  // console.log(lastMv[color])
+  pathHist.push(current)
+  console.log(pathHist)
+
+  if (current === finish || ans === Infinity) {
+    console.log('point to remove ' + pathHist[0])
+    lastMv[color] = pathHist[0]
+    pathComplete = true
+    return pathHist
+  }
+
+  if (fscoreUp === ans) current = up
+  if (fscoreDown === ans) current = down
+  if (fscoreLeft === ans) current = left
+  if (fscoreRight === ans) current = right
+
+  // console.log('location after calc ' + current)
+}
+
+
+
+function getPath(color, target) {
+  current = ghostPos[color]
+  while (!pathComplete) {
+    console.log(pathStepGen(color, target))
+    ghostPath[color] = pathStepGen(color, target)
+  }
+  pathHist = []
+  pathComplete = false
+}
+
+
+
+// const pg = setInterval(function() {
+//   test = fscore(currentPos)
+//   console.log(test)
+// }, 1)
+
+
+// let pathHist = []
+// let pathComplete
+
+// function fscore(target) {
+
+//   // let current
+//   const finish = target
+//   // console.log('loc started at: ' + current)
+
+//   function fscoreCalc(dir) {
+
+//     function hscore(dir) {
+//       const dirloc = cells[dir].getBoundingClientRect()
+//       const endloc = cells[finish].getBoundingClientRect()
+//       const hscoreVal = Math.sqrt(Math.pow((endloc.x - dirloc.x),2) + Math.pow((endloc.y - dirloc.y),2))
+//       return hscoreVal
+//     }
+    
+//     let fscoredir
+//     if ( -1 > dir || dir > cellCount || cells[dir].classList.contains('wall') || pathHist.includes(dir) || cells[dir] === ghMvHis) {
+//       fscoredir = Infinity
+//     } else {
+//       fscoredir = hscore(dir)
+//     }
+//     return fscoredir
+//   }
+
+//   const up = current - width
+//   const down = current + width
+//   const left = current - 1
+//   const right = current + 1
+//   const fscoreUp = fscoreCalc(up)
+//   const fscoreDown = fscoreCalc(down)
+//   const fscoreLeft = fscoreCalc(left)
+//   const fscoreRight = fscoreCalc(right)
+
+//   // console.log('fscore up ' + fscoreUp)
+//   // console.log('fscore down ' + fscoreDown)
+//   // console.log('fscore left ' + fscoreLeft)
+//   // console.log('fscore right ' + fscoreRight)
+
+//   const ans = Math.min(fscoreUp, fscoreDown, fscoreLeft, fscoreRight)
+
+//   if (current === finish || ans === Infinity) {
+//     pathComplete = true
+//     //clearInterval(pathGen)
+//     console.log('target ' + finish)
+//     return pathHist
+//   }
+
+//   pathHist.push(current)
+
+//   if (fscoreUp === ans) current = up
+//   if (fscoreDown === ans) current = down
+//   if (fscoreLeft === ans) current = left
+//   if (fscoreRight === ans) current = right
+
+//   // console.log('loc moved to: ' + current)
+
+// }
+
+// let test
+
+// function generatePath(target) {
+//   while (!pathComplete) {
+//     test = fscore(target)
+//     console.log(test)
+//   }
+//   pathHist = []
+//   pathComplete = false
+// }
+
+// const pathGen = setInterval(function() {
+//   test = fscore(currentPos)
+//   console.log(test)
+// }, 1)
 
 //enemy AI behaviour 2 (roam)
 /**each ghost goes to a different roam location. AI takes concentration of player. */
@@ -437,11 +697,15 @@ function dieAnimReload() {
 generateGrid()
 placeItems()
 addPlayer()
+addGhost('Red')
+addGhost('Blue')
+addGhost('Pink')
+addGhost('Orange')
+//console.log(ghostPos.Red)
 
 
 //**Events**
 
-addGhost('Red')
 
 //start game button
 
