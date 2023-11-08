@@ -12,6 +12,39 @@
 </head>
 <body>
   <div id="container">
+
+    <section class="toggle">
+      <div class="mainMenu">
+        <div class="mainMenuCont">
+          <img class="logo" src="./assets/Logo.png"><br>
+          <h2>Instructions:</h2>
+          <p>Use the ARROW keys  to guide pacman through the maze.</p><img src="./assets/pmanleft.gif">
+          <p>Avoid the ghosts in the maze. If they touch you, you will lose a life.</p><img src="./assets/bnkyleft.gif"><img src="./assets/inkyleft.gif"><img src="./assets/pnkyleft.gif"><img src="./assets/clydleft.gif"><br>
+          <p>Clear the board of all pellets to win (and fruits for bonus points!)</p><img src="./assets/pellet.png"><img src="./assets/powerup.png"><img src="./assets/chry.png"><br>
+
+          <button class="start">START</button>
+          <button class="leaderboard">LEADERBOARD</button>
+        </div>
+      </div>
+    </section>
+
+    <section class ="dispMsg" id="win">
+      YOU WIN!
+    </section>
+
+    <section class ="dispMsg" id="ready">
+      READY
+    </section>
+
+    <section class ="dispMsg" id="gameOver">
+      <div>
+        GAME OVER
+        <p>YOUR SCORE : <span id="scorePrint">0</span></p>
+        <button class="start">PLAY AGAIN</button>
+        <button class="quit">MAIN MENU</button>
+      </div>
+    </section>
+
     <section id="gameDisp">
       <div id="playerBar">
         <div id="lifeDisp">
@@ -32,17 +65,10 @@
       </div>
       <div class="gameBoard"></div>
       <div id="quitBar">
-        <button id="quit">Quit</button>
-        <button id="loseLife">Lose Life</button>
-        <button id="start">Start</button>
-        <button id="reset">Reset</button>
+        <button class="quit">Quit</button>
       </div>
     </section>
-    <section id="startMenuDisp">
-      <div class="win">
-        YOU WIN!
-      </div>
-    </section>
+
   </div>
 </body>
 </html>
