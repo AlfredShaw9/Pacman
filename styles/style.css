@@ -216,7 +216,7 @@ button {
 }
 
 .gameBoard div.pellet {
-  background-image: url('/assets/pellet.png');
+  background-image: url('../assets/pellet.png');
 }
 
 .gameBoard div.powerUp {
