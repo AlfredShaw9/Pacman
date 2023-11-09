@@ -185,7 +185,9 @@ button {
 }
 
 
-
+.targetMark {
+  background-color: red;
+}
 
 
 .gameBoard div {
@@ -208,7 +210,9 @@ button {
 }
 
 .gameBoard div.ghostWall {
-  background-color: aqua;
+  border-top: 4px solid aqua;
+  background-color: black;
+  box-sizing: border-box;
 }
 
 .gameBoard div.pellet {
@@ -332,4 +336,16 @@ button {
 
 .gameBoard div.gMvRightOrange {
   background-image: url('/assets/clydright.gif');
+}
+
+
+
+/*Ghost scared sprites*/
+
+.gameBoard div.ghScared {
+  background-image: url('/assets/ghostscared.gif');
+}
+
+.gameBoard div.ghScaredEnding {
+  background-image: url('/assets/ghostscaredtimer.gif');
 }

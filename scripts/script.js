@@ -23,6 +23,7 @@ let orngSpn
 let score = 0
 let lives = 3
 let fruit = 0
+let scaredTimer = false
 
 const map =
 [ '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@',
@@ -67,7 +68,7 @@ This will also include the css pointer events property to solidify and stop any 
 function generateGrid() {
   for (let i = 0; i < cellCount; i++) {
     const cell = document.createElement('div')
-    cell.innerText = i
+    // cell.innerText = i
     cell.id = i
     cell.style.width = `${100 / width}%`
     grid.append(cell)
@@ -127,6 +128,10 @@ function charReset() {
   removeGhostSprites('Blue')
   removeGhostSprites('Pink')
   removeGhostSprites('Orange')
+  cells[180].classList.add('gMvLeftRed')
+  cells[198].classList.add('gMvLeftBlue')
+  cells[200].classList.add('gMvLeftPink')
+  cells[199].classList.add('gMvLeftOrange')
   clearInterval(moveTimer)
 }
 
@@ -159,76 +164,25 @@ function startGame() {
 
   redSpn = setTimeout(function() {
     ghToggle.Red = true
-  }, 2000)
+  }, 4000)
 
   blueSpn = setTimeout(function() {
     ghToggle.Blue = true
-  }, 4000)
+  }, 6000)
 
   pinkSpn = setTimeout(function() {
     ghToggle.Pink = true
-  }, 8000)
+  }, 10000)
 
   orngSpn = setTimeout(function() {
     ghToggle.Orange = true
-  }, 12000)
+  }, 14000)
 
   setTimeout(function() {
 
     showQuitBtn()
 
     moveTimer = setInterval(function() {
-      pickupChk('powerUp', 50)
-      pickupChk('pellet', 10)
-      playerMove()
-
-      if (ghToggle.Red === true) {
-        addGhost('Red')
-
-        setTimeout(function() {
-          getPath('Red', ghostTarget.Red)
-          ghostMoveDecide('Red')
-          ghostMove('Red')
-        }, 100)
-      } else if (ghToggle.Red === false) {
-        removeGhost('Red')
-      }
-
-      if (ghToggle.Blue === true) {
-        addGhost('Blue')
-        setTimeout(function() {
-          getPath('Blue', ghostTarget.Blue)
-          ghostMoveDecide('Blue')
-          ghostMove('Blue')
-        }, 100)
-      } else if (ghToggle.Blue === false) {
-        removeGhost('Blue')
-      }
-        
-      if (ghToggle.Pink === true) {
-        addGhost('Pink')
-        setTimeout(function() {
-          getPath('Pink', ghostTarget.Pink)
-          ghostMoveDecide('Pink')
-          ghostMove('Pink')
-        }, 100)
-      } else if (ghToggle.Pink === false) {
-        removeGhost('Pink')
-      }
-        
-      if (ghToggle.Orange === true) {
-        addGhost('Orange')
-        setTimeout(function() {
-          getPath('Orange', ghostTarget.Orange)       
-          ghostMoveDecide('Orange')
-          ghostMove('Orange')
-        }, 100)
-      } else if (ghToggle.Orange === false) {
-        removeGhost('Orange')
-      }
-
-      scoreUpdater()
-      ghostHitChk()
 
       ghostTarget = {
         Red: currentPos,
@@ -237,10 +191,88 @@ function startGame() {
         Orange: currentPos + 4 * width,
       }
 
+      // cells[ghostTarget.Red].classList.remove('targetMark')
+      // cells[ghostTarget.Blue].classList.remove('targetMark')
+      // cells[ghostTarget.Pink].classList.remove('targetMark')
+      // cells[ghostTarget.Orange].classList.remove('targetMark')
+
+      scaredToggleChk()
+      // ghostHitChk()
+      ghostEatChk('Red')
+      ghostEatChk('Blue')
+      ghostEatChk('Pink')
+      ghostEatChk('Orange')
+      pickupChk('powerUp', 50)
+      pickupChk('pellet', 10)
+
+      if (ghToggle.Red === true) {
+        addGhost('Red')
+        cells[180].classList.remove('gMvLeftRed')
+
+        setTimeout(function() {
+          getPath('Red', ghostTarget.Red)
+          ghostMoveDecide('Red')
+          ghostMove('Red')
+        }, 100)
+      } else if (ghToggle.Red === false) {
+        removeGhost('Red')
+        cells[180].classList.add('gMvLeftRed')
+      }
+
+      if (ghToggle.Blue === true) {
+        addGhost('Blue')
+        cells[198].classList.remove('gMvLeftBlue')
+
+        setTimeout(function() {
+          getPath('Blue', ghostTarget.Blue)
+          ghostMoveDecide('Blue')
+          ghostMove('Blue')
+        }, 100)
+      } else if (ghToggle.Blue === false) {
+        removeGhost('Blue')
+        cells[198].classList.add('gMvLeftBlue')
+      }
+        
+      if (ghToggle.Pink === true) {
+        addGhost('Pink')
+        cells[200].classList.remove('gMvLeftPink')
+
+        setTimeout(function() {
+          getPath('Pink', ghostTarget.Pink)
+          ghostMoveDecide('Pink')
+          ghostMove('Pink')
+        }, 100)
+      } else if (ghToggle.Pink === false) {
+        removeGhost('Pink')
+        cells[200].classList.add('gMvLeftPink')
+      }
+        
+      if (ghToggle.Orange === true) {
+        addGhost('Orange')
+        cells[199].classList.remove('gMvLeftOrange')
+
+        setTimeout(function() {
+          getPath('Orange', ghostTarget.Orange)       
+          ghostMoveDecide('Orange')
+          ghostMove('Orange')
+        }, 100)
+      } else if (ghToggle.Orange === false) {
+        removeGhost('Orange')
+        cells[199].classList.add('gMvLeftOrange')
+      }
+
+      playerMove()
+      scoreUpdater()
+
       ghostTargetVld('Red')
       ghostTargetVld('Blue')
       ghostTargetVld('Pink')
       ghostTargetVld('Orange')
+
+      // cells[ghostTarget.Red].classList.add('targetMark')
+      // cells[ghostTarget.Blue].classList.add('targetMark')
+      // cells[ghostTarget.Pink].classList.add('targetMark')
+      // cells[ghostTarget.Orange].classList.add('targetMark')
 
     }, 300)
   }, 2000)
@@ -250,7 +282,7 @@ function ghostTargetVld(color) {
   if (ghostTarget[color] > cellCount || ghostTarget[color] < 0) {
     ghostTarget[color] = currentPos
     console.log(color + ' ghost changed target to ' + ghostTarget[color])
-  } else return
+  }
 }
 
 
@@ -386,9 +418,10 @@ function ghostMoveDecide(color) {
   // if (!ghostPath[color]) {
   //   ghDir[color] = ''
   // } else
-  if (!ghostPath[color]) {
-    ghDir[color] = 'left'
-  } else if (ghostPath[color][1] === ghostPos[color] - width) {
+  // if (!ghostPath[color]) {
+  //   ghDir[color] = 'left'
+  // } else
+  if (ghostPath[color][1] === ghostPos[color] - width) {
     ghDir[color] = 'up'
   } else if (ghostPath[color][1] === ghostPos[color] + width) {
     ghDir[color] = 'down'
@@ -403,6 +436,9 @@ function addGhost(color){
   // console.log(color)
   // console.log(ghostPos.Red)
   // console.log(ghostPos[color])
+  if (scaredTimer === true) {
+    cells[ghostPos[color]].classList.add('ghScared')
+  }
   cells[ghostPos[color]].classList.add(`ghost${color}`)
   if (ghDir[color] === 'up') {
     cells[ghostPos[color]].classList.add(`gMvUp${color}`)
@@ -420,15 +456,23 @@ function removeGhostSprites(color){
   cells[ghostPos[color]].classList.remove(`gMvDown${color}`)
   cells[ghostPos[color]].classList.remove(`gMvLeft${color}`)
   cells[ghostPos[color]].classList.remove(`gMvRight${color}`)
+  if (scaredTimer === true) {
+    cells[ghostPos[color]].classList.remove('ghScared')
+  }
 }
 
 function removeGhost(color){
+  cells[ghostPos[color]].classList.remove('ghScared')
   cells[ghostPos[color]].classList.remove(`ghost${color}`)
   removeGhostSprites(color)
 }
 
 function ghostMove(color) {
   removeGhost(color)
+  // if (scaredTimer === true) {
+  //   const randomDir = [ 'up', 'down', 'left', 'right']
+  //   ghDir[color] = randomDir[Math.floor(Math.random() * 4)]
+  // }
   if (ghDir[color] === 'up') {
     ghNextCell = ghostPos[color] - width
   } else if (ghDir[color] === 'down') {
@@ -464,9 +508,6 @@ function pickupChk(item, points) {
     // console.log('count ' + pickupCount)
     // console.log('target ' + pickupTarget)
     cells[currentPos].classList.remove(`${item}`)
-    if (item === 'powerUp') {
-      //change ghost state and start a timer / refresh it if timer is already running
-    }
     if (pickupCount === pickupTarget) {
       pickupCount = 0
       pickupTarget = 0
@@ -487,7 +528,22 @@ function pickupChk(item, points) {
   }
 }
 
+// let scaredRefreshToggle = false
 
+function scaredToggleChk() {
+  if (cells[currentPos].classList.contains('powerUp')) {
+    console.log('powerup collected')
+    scaredTimer = true
+    // if (scaredRefreshToggle === true) {
+    //   clearTimeout(scaredOff)
+    // }
+    // scaredRefreshToggle = true
+    const scaredOff = setTimeout(function() {
+      scaredTimer = false
+      // scaredRefreshToggle = false
+    }, 10000)
+  }
+}
 
 //player fruit pickup interaction
 /**add fruit to fruit div 
@@ -502,8 +558,16 @@ for 4th furit, add 700pts */
 
 //player enemy interaction
 function ghostHitChk() {
-  if (cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
+  if (cells[currentPos].classList.contains('ghScared')) {
+    return
+  } else if (cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
     ghostHit()
+  }
+}
+
+function ghostEatChk(color) {
+  if (cells[currentPos].classList.contains('ghScared')) {
+    ghostEat(color)
   }
 }
 
@@ -545,8 +609,40 @@ Referance variable that will check for correct state AND current ammount of this
 This interaction count will be wiped at the end of the duration of the state.
 For certain interaction counts, the score value will increase to a maximum.
 After interaction, ghost state is changed again */
+function ghostEat(color) {
+  removeGhost(color)
+  removeGhostSprites(color)
+  ghToggle[color] = false
+  ghostPos[color] = 161
+  score += 400
+  setTimeout(function() {
+    ghToggle[color] = true
+  }, 6000)
+}
 
-
+//   removeGhost('Red')
+//   removeGhost('Blue')
+//   removeGhost('Pink')
+//   removeGhost('Orange')
+//   currentPos = 237
+//   ghostPos.Red = 161
+//   ghostPos.Blue = 161
+//   ghostPos.Pink = 161
+//   ghostPos.Orange = 161
+//   addPlayer()
+//   clearTimeout(redSpn)
+//   clearTimeout(blueSpn)
+//   clearTimeout(pinkSpn)
+//   clearTimeout(orngSpn)
+//   removeSprites()
+//   removeGhostSprites('Red')
+//   removeGhostSprites('Blue')
+//   removeGhostSprites('Pink')
+//   removeGhostSprites('Orange')
+//   cells[180].classList.add('gMvLeftRed')
+//   cells[198].classList.add('gMvLeftBlue')
+//   cells[200].classList.add('gMvLeftPink')
+//   cells[199].classList.add('gMvLeftOrange')
 
 //Win game
 /**Check for all map pickup items and powerups to have been collected (excluding fruit)
@@ -620,20 +716,45 @@ function pathStepGen(color, target) {
   // console.log('fscore left ' + fscoreLeft)
   // console.log('fscore right ' + fscoreRight)
 
-  const ans = Math.min(fscoreUp, fscoreDown, fscoreLeft, fscoreRight)
+  let ans
+
+  ans = Math.min(fscoreUp, fscoreDown, fscoreLeft, fscoreRight)
   // console.log(ans)
 
+  if (scaredTimer === true) {
+    const dirs = []
+    if (fscoreUp !== Infinity) dirs.push(fscoreUp)
+    if (fscoreDown !== Infinity) dirs.push(fscoreDown)
+    if (fscoreLeft !== Infinity) dirs.push(fscoreLeft)
+    if (fscoreRight !== Infinity) dirs.push(fscoreRight)
+    console.log(dirs)
+    // const dirs = [fscoreUp, fscoreDown, fscoreLeft, fscoreRight]
+    const choose = Math.floor(Math.random() * dirs.length)
+    // console.log(dirs[choose])
+    ans = dirs[choose]
+  }
+
+
+  // if (!ans) ans = lastMv[color]
   // console.log(lastMv[color])
   pathHist.push(current)
-  console.log(pathHist)
+  // console.log(pathHist)
+  // console.log('target: ' + target)
 
-  if (pathHist && current === finish || ans === Infinity) {
+  
+  if (pathHist[0] === finish){
+    pathHist = []
+    pathHist.push(-200, lastMv[color])
+    // console.log('target hit')
+    return pathHist
+  } else if (pathHist && current === finish || ans === Infinity) {
     // console.log('point to remove ' + pathHist[0])
     lastMv[color] = pathHist[0]
     pathComplete = true
     return pathHist
-  } else if (!pathHist){
-    pathHist.push(0, lastMv[color])
+  } else if (scaredTimer === true && pathHist.length === 2) {
+    pathComplete = true
+    return pathHist
   }
 
   if (fscoreUp === ans) current = up
@@ -649,7 +770,7 @@ function pathStepGen(color, target) {
 function getPath(color, target) {
   current = ghostPos[color]
   while (!pathComplete) {
-    console.log(pathStepGen(color, target))
+    // console.log(pathStepGen(color, target))
     ghostPath[color] = pathStepGen(color, target)
   }
   pathHist = []
