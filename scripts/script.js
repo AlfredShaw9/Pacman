@@ -6,10 +6,9 @@ const width = 19
 const height = 22
 const cellCount = width * height
 let currentPos = 237
-// let ghDir
 let plDir
 let plDirLog
-let plNextCell
+let plNextCell = 236
 let ghNextCell
 let moveTimer
 let current
@@ -22,8 +21,8 @@ let pinkSpn
 let orngSpn
 let score = 0
 let lives = 3
-let fruit = 0
 let scaredTimer = false
+let t = false
 
 const map =
 [ '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@',
@@ -55,6 +54,41 @@ const ghToggle = {
   Blue: false,
   Pink: false,
   Orange: false,
+}
+
+const ghostPos = {
+  Red: 161,
+  Blue: 161,
+  Pink: 161,
+  Orange: 161,
+}
+
+const ghDir = {
+  Red: 'left',
+  Blue: 'left',
+  Pink: 'left',
+  Orange: 'left',
+}
+
+const ghostPath = {
+  Red: [],
+  Blue: [],
+  Pink: [],
+  Orange: [],
+}
+
+const slowDown = {
+  Red: false,
+  Blue: false,
+  Pink: false,
+  Orange: false,
+}
+
+const lastMv = {
+  Red: 0,
+  Blue: 0,
+  Pink: 0,
+  Orange: 0,
 }
 
 //**functions**
@@ -136,11 +170,9 @@ function gameReset() {
   charReset()
   score = 0
   lives = 3
-  fruit = 0
   document.querySelector('#life1').style.visibility = 'visible'
   document.querySelector('#life2').style.visibility = 'visible'
   document.querySelector('#life3').style.visibility = 'visible'
-  // resetFruit()
   placeItems()
 }
 
@@ -182,19 +214,15 @@ function startGame() {
 
       ghostTarget = {
         Red: currentPos,
-        Blue: currentPos - 2 * width,
+        Blue: currentPos - 4 * width,
         Pink: currentPos + 4,
         Orange: currentPos + 4 * width,
       }
 
       scaredToggleChk()
-      // ghostHitChk()
-      ghostEatChk('Red')
-      ghostEatChk('Blue')
-      ghostEatChk('Pink')
-      ghostEatChk('Orange')
       pickupChk('powerUp', 50)
       pickupChk('pellet', 10)
+      t = true
 
       if (ghToggle.Red === true) {
         addGhost('Red')
@@ -204,6 +232,7 @@ function startGame() {
           getPath('Red', ghostTarget.Red)
           ghostMoveDecide('Red')
           ghostMove('Red')
+          ghostHitChk()
         }, 100)
       } else if (ghToggle.Red === false) {
         removeGhost('Red')
@@ -218,6 +247,7 @@ function startGame() {
           getPath('Blue', ghostTarget.Blue)
           ghostMoveDecide('Blue')
           ghostMove('Blue')
+          ghostHitChk()
         }, 100)
       } else if (ghToggle.Blue === false) {
         removeGhost('Blue')
@@ -232,6 +262,7 @@ function startGame() {
           getPath('Pink', ghostTarget.Pink)
           ghostMoveDecide('Pink')
           ghostMove('Pink')
+          ghostHitChk()
         }, 100)
       } else if (ghToggle.Pink === false) {
         removeGhost('Pink')
@@ -246,6 +277,7 @@ function startGame() {
           getPath('Orange', ghostTarget.Orange)       
           ghostMoveDecide('Orange')
           ghostMove('Orange')
+          ghostHitChk()
         }, 100)
       } else if (ghToggle.Orange === false) {
         removeGhost('Orange')
@@ -267,7 +299,7 @@ function startGame() {
 function ghostTargetVld(color) {
   if (ghostTarget[color] > cellCount || ghostTarget[color] < 0) {
     ghostTarget[color] = currentPos
-    console.log(color + ' ghost changed target to ' + ghostTarget[color])
+    // console.log(color + ' ghost changed target to ' + ghostTarget[color])
   }
 }
 
@@ -359,22 +391,7 @@ function playerMove() {
 }
 
 
-//Add ghosts to board
-
-const ghostPos = {
-  Red: 161,
-  Blue: 161,
-  Pink: 161,
-  Orange: 161,
-}
-
-const ghDir = {
-  Red: 'left',
-  Blue: 'left',
-  Pink: 'left',
-  Orange: 'left',
-}
-
+//Add ghosts to board and define anims
 function ghostMoveDecide(color) {
   if (ghostPath[color][1] === ghostPos[color] - width) {
     ghDir[color] = 'up'
@@ -389,7 +406,7 @@ function ghostMoveDecide(color) {
 
 function addGhost(color){
   if (scaredTimer === true) {
-    cells[ghostPos[color]].classList.add('ghScared')
+    cells[ghostPos[color]].classList.add(`ghScared${color}`)
   }
   cells[ghostPos[color]].classList.add(`ghost${color}`)
   if (ghDir[color] === 'up') {
@@ -409,17 +426,26 @@ function removeGhostSprites(color){
   cells[ghostPos[color]].classList.remove(`gMvLeft${color}`)
   cells[ghostPos[color]].classList.remove(`gMvRight${color}`)
   if (scaredTimer === true) {
-    cells[ghostPos[color]].classList.remove('ghScared')
+    cells[ghostPos[color]].classList.remove(`ghScared${color}`)
   }
 }
 
 function removeGhost(color){
-  cells[ghostPos[color]].classList.remove('ghScared')
+  cells[ghostPos[color]].classList.remove(`ghScared${color}`)
   cells[ghostPos[color]].classList.remove(`ghost${color}`)
   removeGhostSprites(color)
 }
 
 function ghostMove(color) {
+
+  if (scaredTimer === true) {
+    slowDown[color] = !slowDown[color]
+  }
+
+  if (slowDown[color] === true) {
+    return
+  }
+
   removeGhost(color)
   if (ghDir[color] === 'up') {
     ghNextCell = ghostPos[color] - width
@@ -438,13 +464,6 @@ function ghostMove(color) {
 
 
 
-//add fruit to board
-/**EXTRA EXTRA EXTRA */
-/**This will be an event that will occur after a score. The location may be random or pre determined */
-
-
-
-
 //player item pickup interaction
 /**remove pickup from board, add 10 to score for pellet.
 apply effect to enemies, switch enemy player interaction, reset timer from pickup
@@ -458,7 +477,7 @@ function pickupChk(item, points) {
       pickupCount = 0
       pickupTarget = 0
       //Win game
-      /**Check for all map pickup items and powerups to have been collected (excluding fruit)
+      /**Check for all map pickup items and powerups to have been collected
       Will call initialise game AND add all powerups and pickup items again. */
       win()
       setTimeout(function() {
@@ -480,40 +499,34 @@ function pickupChk(item, points) {
 // Currently the state does not refresh on extra pickup. Will rectify this at some point if time allows.
 function scaredToggleChk() {
   if (cells[currentPos].classList.contains('powerUp')) {
-    console.log('powerup collected')
     scaredTimer = true
     const scaredOff = setTimeout(function() {
       scaredTimer = false
+      slowDown.Red = false
+      slowDown.Blue = false
+      slowDown.Pink = false
+      slowDown.Orange = false
     }, 10000)
   }
 }
 
 
 
-//player fruit pickup interaction
-/**EXTRA EXTRA EXTRA */
-/**add fruit to fruit div 
-for 1st fruit, add 100pts
-for 2nd fruit, add 300pts
-for 3rd fruit, add 500pts
-for 4th furit, add 700pts */
-
-
-
 //player enemy interaction
 function ghostHitChk() {
-  if (cells[currentPos].classList.contains('ghScared')) {
-    return
-  } else if (cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
+  if (cells[currentPos].classList.contains('ghScaredRed')) ghostEat('Red')
+  else if (cells[currentPos].classList.contains('ghScaredBlue')) ghostEat('Blue')
+  else if (cells[currentPos].classList.contains('ghScaredPink')) ghostEat('Pink')
+  else if (cells[currentPos].classList.contains('ghScaredOrange')) ghostEat('Orange')
+  else if (t === true && cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
     ghostHit()
+    t = false
   }
 }
 
-function ghostEatChk(color) {
-  if (cells[currentPos].classList.contains('ghScared')) {
-    ghostEat(color)
-  }
-}
+// function ghostEatChk() {
+
+// }
 
 
 /**INTERACTION 1
@@ -561,7 +574,7 @@ function ghostEat(color) {
   score += 400
   setTimeout(function() {
     ghToggle[color] = true
-  }, 6000)
+  }, 8500)
 }
 
 //enemy AI behaviour
@@ -571,21 +584,6 @@ Initial pathfinding is just path to player. Will implement 2 on fastest path and
 /**Pathfinding takes locations based on player and other enemy location */
 
 //Main Pathfinding AI
-
-const lastMv = {
-  Red: 0,
-  Blue: 0,
-  Pink: 0,
-  Orange: 0,
-}
-
-const ghostPath = {
-  Red: [],
-  Blue: [],
-  Pink: [],
-  Orange: [],
-}
-
 let pathHist = []
 let pathComplete = false
 
@@ -643,7 +641,8 @@ function pathStepGen(color, target) {
     lastMv[color] = pathHist[0]
     pathComplete = true
     return pathHist
-  } else if (scaredTimer === true && pathHist.length === 2) {
+  } else if (scaredTimer === true && pathHist.length === 3) {
+    lastMv[color] = pathHist[0]
     pathComplete = true
     return pathHist
   }
@@ -749,36 +748,19 @@ function showQuitBtn() {
 
 
 
-//Reset fruit
-// function resetFruit() {
-//   document.querySelector('#chry').style.visibility = 'hidden'
-//   document.querySelector('#strb').style.visibility = 'hidden'
-//   document.querySelector('#orng').style.visibility = 'hidden'
-//   document.querySelector('#apple').style.visibility = 'hidden'
-// }
-
-
-
 //**Executions**
-
-
 
 //page load
 generateGrid()
 placeItems()
 addPlayer()
-// resetFruit()
 
 
 
 //**Events**
 
-
-
 //Movment input
 document.addEventListener('keydown', dirPress)
-
-
 
 //start button
 let i
@@ -795,8 +777,6 @@ for (i of startBtns) {
     startGame()
   })
 }
-
-
 
 // quit button
 const quitBtns = document.querySelectorAll('.quit')

@@ -39,7 +39,7 @@ body {
   text-align: center;
   position: absolute;
   z-index: 10;
-  transform: translateY(38px);
+  transform: translateY(33px);
 }
 
 .toggle {
@@ -131,7 +131,7 @@ body {
 
 #playerBar {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   border: 2px solid white;
   height: 50px;
@@ -144,10 +144,15 @@ body {
   margin: 0px 5px;
 }
 
-#lifeDisp, #fruitDisp {
+#scr {
+  margin-right: 20px;
+}
+
+#lifeDisp {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-left: 20px;
 }
 
 #lifeDisp div {
@@ -210,7 +215,7 @@ button {
 }
 
 .gameBoard div.ghostWall {
-  border-top: 4px solid aqua;
+  border-top: 2px solid aqua;
   background-color: black;
   box-sizing: border-box;
 }
@@ -342,10 +347,22 @@ button {
 
 /*Ghost scared sprites*/
 
-.gameBoard div.ghScared {
+.gameBoard div.ghScaredRed {
   background-image: url('../assets/ghostscared.gif');
 }
 
-.gameBoard div.ghScaredEnding {
-  background-image: url('../assets/ghostscaredtimer.gif');
+.gameBoard div.ghScaredBlue {
+  background-image: url('../assets/ghostscared.gif');
 }
+
+.gameBoard div.ghScaredPink {
+  background-image: url('../assets/ghostscared.gif');
+}
+
+.gameBoard div.ghScaredOrange {
+  background-image: url('../assets/ghostscared.gif');
+}
+
+/* .gameBoard div.ghScaredEnding {
+  background-image: url('../assets/ghostscaredtimer.gif');
+} */
