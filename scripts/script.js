@@ -678,7 +678,7 @@ function scoreUpdater() {
 //Die animation
 function dieAnimReload() {
   const img = document.createElement('img')
-  img.src = '/assets/pmandie.gif?' + Math.random()
+  img.src = '../assets/pmandie.gif?' + Math.random()
   cells[currentPos].style.backgroundImage = 'url(' + img.src + ')'
 }
 
