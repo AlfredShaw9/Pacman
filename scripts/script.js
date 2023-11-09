@@ -22,7 +22,6 @@ let orngSpn
 let score = 0
 let lives = 3
 let scaredTimer = false
-let t = false
 
 const map =
 [ '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@',
@@ -219,11 +218,11 @@ function startGame() {
         Orange: currentPos + 4 * width,
       }
 
+      ghostHitChk()
       scaredToggleChk()
       pickupChk('powerUp', 50)
       pickupChk('pellet', 10)
-      t = true
-
+      
       if (ghToggle.Red === true) {
         addGhost('Red')
         cells[180].classList.remove('gMvLeftRed')
@@ -232,7 +231,6 @@ function startGame() {
           getPath('Red', ghostTarget.Red)
           ghostMoveDecide('Red')
           ghostMove('Red')
-          ghostHitChk()
         }, 100)
       } else if (ghToggle.Red === false) {
         removeGhost('Red')
@@ -247,7 +245,6 @@ function startGame() {
           getPath('Blue', ghostTarget.Blue)
           ghostMoveDecide('Blue')
           ghostMove('Blue')
-          ghostHitChk()
         }, 100)
       } else if (ghToggle.Blue === false) {
         removeGhost('Blue')
@@ -262,7 +259,6 @@ function startGame() {
           getPath('Pink', ghostTarget.Pink)
           ghostMoveDecide('Pink')
           ghostMove('Pink')
-          ghostHitChk()
         }, 100)
       } else if (ghToggle.Pink === false) {
         removeGhost('Pink')
@@ -277,7 +273,6 @@ function startGame() {
           getPath('Orange', ghostTarget.Orange)       
           ghostMoveDecide('Orange')
           ghostMove('Orange')
-          ghostHitChk()
         }, 100)
       } else if (ghToggle.Orange === false) {
         removeGhost('Orange')
@@ -518,9 +513,8 @@ function ghostHitChk() {
   else if (cells[currentPos].classList.contains('ghScaredBlue')) ghostEat('Blue')
   else if (cells[currentPos].classList.contains('ghScaredPink')) ghostEat('Pink')
   else if (cells[currentPos].classList.contains('ghScaredOrange')) ghostEat('Orange')
-  else if (t === true && cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
+  else if (cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
     ghostHit()
-    t = false
   }
 }
 
