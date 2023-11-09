@@ -50,18 +50,15 @@ const map =
   '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@', '@' ]
 
 
-//enemy 1 - 4 location
-
+const ghToggle = {
+  Red: false,
+  Blue: false,
+  Pink: false,
+  Orange: false,
+}
 
 //**functions**
 
-
-
-//menu visibility toggle
-//leaderboard visibility toggle
-//instructions visibility toggle
-/**The visibility toggle is simply a class that will set the ENTIRE div visibility
-This will also include the css pointer events property to solidify and stop any bugs happening */
 
 
 //Generate grid
@@ -75,6 +72,8 @@ function generateGrid() {
     cells.push(cell)
   }
 }
+
+
 
 //Add layout of maze and items on grid
 /**hardcoded maze and item locations */
@@ -98,12 +97,6 @@ function placeItems() {
 }
 
 
-const ghToggle = {
-  Red: false,
-  Blue: false,
-  Pink: false,
-  Orange: false,
-}
 
 //character reset
 /**resets the player position and stops the player movment running interval */
@@ -135,6 +128,8 @@ function charReset() {
   clearInterval(moveTimer)
 }
 
+
+
 //game reset
 /**resets the game values, called during each new game*/
 function gameReset() {
@@ -145,9 +140,10 @@ function gameReset() {
   document.querySelector('#life1').style.visibility = 'visible'
   document.querySelector('#life2').style.visibility = 'visible'
   document.querySelector('#life3').style.visibility = 'visible'
-  resetFruit()
+  // resetFruit()
   placeItems()
 }
+
 
 
 //start game
@@ -190,11 +186,6 @@ function startGame() {
         Pink: currentPos + 4,
         Orange: currentPos + 4 * width,
       }
-
-      // cells[ghostTarget.Red].classList.remove('targetMark')
-      // cells[ghostTarget.Blue].classList.remove('targetMark')
-      // cells[ghostTarget.Pink].classList.remove('targetMark')
-      // cells[ghostTarget.Orange].classList.remove('targetMark')
 
       scaredToggleChk()
       // ghostHitChk()
@@ -269,11 +260,6 @@ function startGame() {
       ghostTargetVld('Pink')
       ghostTargetVld('Orange')
 
-      // cells[ghostTarget.Red].classList.add('targetMark')
-      // cells[ghostTarget.Blue].classList.add('targetMark')
-      // cells[ghostTarget.Pink].classList.add('targetMark')
-      // cells[ghostTarget.Orange].classList.add('targetMark')
-
     }, 300)
   }, 2000)
 }
@@ -284,6 +270,7 @@ function ghostTargetVld(color) {
     console.log(color + ' ghost changed target to ' + ghostTarget[color])
   }
 }
+
 
 
 //Add / remove player
@@ -312,6 +299,8 @@ function removeSprites(){
   cells[currentPos].classList.remove('pMvRight')
 }
 
+
+
 //direction availability
 /**take player direction and location and finds next valid input */
 function teleCheck(next) {
@@ -332,6 +321,8 @@ function wallChk() {
   }
 }
 
+
+
 //player movment
 /**move player to new location based on previous location and available inputs */
 function dirPress(evt){
@@ -346,17 +337,6 @@ function dirPress(evt){
     plDir = 'right'
   }
 }
-//TESTING GHOST MOVMENT
-//   }  else if (key === 'KeyW') {
-//     ghDir.Red = 'up'
-//   } else if (key === 'KeyS') {
-//     ghDir.Red = 'down'
-//   } else if (key === 'KeyA') {
-//     ghDir.Red = 'left'
-//   } else if (key === 'KeyD') {
-//     ghDir.Red = 'right'
-//   }
-// }
 
 function playerMove() {
   removePlayer()
@@ -380,24 +360,6 @@ function playerMove() {
 
 
 //Add ghosts to board
-/** */
-
-// class Ghost {
-//   constructor(startingPosition, cssClass) {
-//     this.startingPosition = startingPosition
-//     this.cssClass = cssClass
-//   }
-
-//   scared() {
-//     console.log('AAAHHHH')
-//   }
-// }
-
-// const redGhost = new Ghost(200, 'redGhost')
-// const blueGhost = new Ghost(25, 'blueGhost')
-
-// redGhost.scared()
-/**THIS IS MY CLASS DEMONSTRATION, need to get to grips with these... */
 
 const ghostPos = {
   Red: 161,
@@ -414,13 +376,6 @@ const ghDir = {
 }
 
 function ghostMoveDecide(color) {
-  
-  // if (!ghostPath[color]) {
-  //   ghDir[color] = ''
-  // } else
-  // if (!ghostPath[color]) {
-  //   ghDir[color] = 'left'
-  // } else
   if (ghostPath[color][1] === ghostPos[color] - width) {
     ghDir[color] = 'up'
   } else if (ghostPath[color][1] === ghostPos[color] + width) {
@@ -433,9 +388,6 @@ function ghostMoveDecide(color) {
 }
 
 function addGhost(color){
-  // console.log(color)
-  // console.log(ghostPos.Red)
-  // console.log(ghostPos[color])
   if (scaredTimer === true) {
     cells[ghostPos[color]].classList.add('ghScared')
   }
@@ -469,10 +421,6 @@ function removeGhost(color){
 
 function ghostMove(color) {
   removeGhost(color)
-  // if (scaredTimer === true) {
-  //   const randomDir = [ 'up', 'down', 'left', 'right']
-  //   ghDir[color] = randomDir[Math.floor(Math.random() * 4)]
-  // }
   if (ghDir[color] === 'up') {
     ghNextCell = ghostPos[color] - width
   } else if (ghDir[color] === 'down') {
@@ -490,12 +438,12 @@ function ghostMove(color) {
 
 
 
-
 //add fruit to board
-/**This will be an event that will occur after a score. The location may be random or pre determined */
 /**EXTRA EXTRA EXTRA */
-/**use a basic AI to make the fruit move randomly around the board */
-// pickupCount = 189
+/**This will be an event that will occur after a score. The location may be random or pre determined */
+
+
+
 
 //player item pickup interaction
 /**remove pickup from board, add 10 to score for pellet.
@@ -505,12 +453,13 @@ function pickupChk(item, points) {
   if (cells[currentPos].classList.contains(`${item}`)){
     score += points
     pickupCount += 1
-    // console.log('count ' + pickupCount)
-    // console.log('target ' + pickupTarget)
     cells[currentPos].classList.remove(`${item}`)
     if (pickupCount === pickupTarget) {
       pickupCount = 0
       pickupTarget = 0
+      //Win game
+      /**Check for all map pickup items and powerups to have been collected (excluding fruit)
+      Will call initialise game AND add all powerups and pickup items again. */
       win()
       setTimeout(function() {
       }, 500)
@@ -528,31 +477,26 @@ function pickupChk(item, points) {
   }
 }
 
-// let scaredRefreshToggle = false
-
+// Currently the state does not refresh on extra pickup. Will rectify this at some point if time allows.
 function scaredToggleChk() {
   if (cells[currentPos].classList.contains('powerUp')) {
     console.log('powerup collected')
     scaredTimer = true
-    // if (scaredRefreshToggle === true) {
-    //   clearTimeout(scaredOff)
-    // }
-    // scaredRefreshToggle = true
     const scaredOff = setTimeout(function() {
       scaredTimer = false
-      // scaredRefreshToggle = false
     }, 10000)
   }
 }
 
+
+
 //player fruit pickup interaction
+/**EXTRA EXTRA EXTRA */
 /**add fruit to fruit div 
 for 1st fruit, add 100pts
 for 2nd fruit, add 300pts
 for 3rd fruit, add 500pts
 for 4th furit, add 700pts */
-/**EXTRA EXTRA EXTRA */
-/**add more fruits if i have time */
 
 
 
@@ -579,7 +523,6 @@ function ghostHit() {
   clearInterval(moveTimer)
   document.querySelector(`#life${lives}`).style.visibility = 'hidden'
   lives--
-  // console.log(lives)
   hideQuitBtn()
   removeSprites()
   setTimeout(function() {
@@ -588,10 +531,11 @@ function ghostHit() {
       cells[currentPos].style.removeProperty('background-image')
       charReset()
       if (lives === 0) {
-        // console.log('game over')
+        //Lose game
+        /**Check logic for no lives left, get score and keep in local storage for leaderboard.
+        Reset game but dont start it. Bring up game over menu */
         showLose()
         scoreUpdater()
-        // console.log(score)
         document.getElementById('scorePrint').innerHTML = score
         gameReset()
       } else {
@@ -620,46 +564,13 @@ function ghostEat(color) {
   }, 6000)
 }
 
-//   removeGhost('Red')
-//   removeGhost('Blue')
-//   removeGhost('Pink')
-//   removeGhost('Orange')
-//   currentPos = 237
-//   ghostPos.Red = 161
-//   ghostPos.Blue = 161
-//   ghostPos.Pink = 161
-//   ghostPos.Orange = 161
-//   addPlayer()
-//   clearTimeout(redSpn)
-//   clearTimeout(blueSpn)
-//   clearTimeout(pinkSpn)
-//   clearTimeout(orngSpn)
-//   removeSprites()
-//   removeGhostSprites('Red')
-//   removeGhostSprites('Blue')
-//   removeGhostSprites('Pink')
-//   removeGhostSprites('Orange')
-//   cells[180].classList.add('gMvLeftRed')
-//   cells[198].classList.add('gMvLeftBlue')
-//   cells[200].classList.add('gMvLeftPink')
-//   cells[199].classList.add('gMvLeftOrange')
-
-//Win game
-/**Check for all map pickup items and powerups to have been collected (excluding fruit)
-Will call initialise game AND add all powerups and pickup items again. */
-
-
-//Lose game
-/**Check logic for no lives left, get score and keep in local storage for leaderboard.
-Reset game but dont start it. Bring up game over menu */
-
-
-//enemy AI behaviour 1 (chase)
+//enemy AI behaviour
 /**Possibility for unique ais for each ghost like real game
 Initial pathfinding is just path to player. Will implement 2 on fastest path and 2 on random path for functionality.
 /**EXTRA EXTRA EXTRA */
 /**Pathfinding takes locations based on player and other enemy location */
 
+//Main Pathfinding AI
 
 const lastMv = {
   Red: 0,
@@ -681,7 +592,6 @@ let pathComplete = false
 function pathStepGen(color, target) {
 
   const finish = target
-  // console.log(current)
 
   function hscore(dir) {
     const dirloc = cells[dir].getBoundingClientRect()
@@ -692,12 +602,10 @@ function pathStepGen(color, target) {
 
   function fscoreCalc(dir) {
     let fscoredir
-    // console.log('loc ' + dir)
     if ( -1 > dir || dir > cellCount || cells[dir].classList.contains('wall') || dir === lastMv[color] || pathHist.includes(dir)) {
       fscoredir = Infinity
     } else {
       fscoredir = hscore(dir)
-      //console.log('locked out cell ' + lastMv[color])
     }
     return fscoredir
   }
@@ -711,15 +619,9 @@ function pathStepGen(color, target) {
   const fscoreLeft = fscoreCalc(left)
   const fscoreRight = fscoreCalc(right)
 
-  // console.log('fscore up ' + fscoreUp)
-  // console.log('fscore down ' + fscoreDown)
-  // console.log('fscore left ' + fscoreLeft)
-  // console.log('fscore right ' + fscoreRight)
-
   let ans
 
   ans = Math.min(fscoreUp, fscoreDown, fscoreLeft, fscoreRight)
-  // console.log(ans)
 
   if (scaredTimer === true) {
     const dirs = []
@@ -727,28 +629,17 @@ function pathStepGen(color, target) {
     if (fscoreDown !== Infinity) dirs.push(fscoreDown)
     if (fscoreLeft !== Infinity) dirs.push(fscoreLeft)
     if (fscoreRight !== Infinity) dirs.push(fscoreRight)
-    console.log(dirs)
-    // const dirs = [fscoreUp, fscoreDown, fscoreLeft, fscoreRight]
     const choose = Math.floor(Math.random() * dirs.length)
-    // console.log(dirs[choose])
     ans = dirs[choose]
   }
 
-
-  // if (!ans) ans = lastMv[color]
-  // console.log(lastMv[color])
   pathHist.push(current)
-  // console.log(pathHist)
-  // console.log('target: ' + target)
-
   
   if (pathHist[0] === finish){
     pathHist = []
     pathHist.push(-200, lastMv[color])
-    // console.log('target hit')
     return pathHist
   } else if (pathHist && current === finish || ans === Infinity) {
-    // console.log('point to remove ' + pathHist[0])
     lastMv[color] = pathHist[0]
     pathComplete = true
     return pathHist
@@ -762,15 +653,12 @@ function pathStepGen(color, target) {
   if (fscoreLeft === ans) current = left
   if (fscoreRight === ans) current = right
 
-  // console.log('location after calc ' + current)
 }
-
 
 
 function getPath(color, target) {
   current = ghostPos[color]
   while (!pathComplete) {
-    // console.log(pathStepGen(color, target))
     ghostPath[color] = pathStepGen(color, target)
   }
   pathHist = []
@@ -779,114 +667,15 @@ function getPath(color, target) {
 
 
 
-// const pg = setInterval(function() {
-//   test = fscore(currentPos)
-//   console.log(test)
-// }, 1)
-
-
-// let pathHist = []
-// let pathComplete
-
-// function fscore(target) {
-
-//   // let current
-//   const finish = target
-//   // console.log('loc started at: ' + current)
-
-//   function fscoreCalc(dir) {
-
-//     function hscore(dir) {
-//       const dirloc = cells[dir].getBoundingClientRect()
-//       const endloc = cells[finish].getBoundingClientRect()
-//       const hscoreVal = Math.sqrt(Math.pow((endloc.x - dirloc.x),2) + Math.pow((endloc.y - dirloc.y),2))
-//       return hscoreVal
-//     }
-    
-//     let fscoredir
-//     if ( -1 > dir || dir > cellCount || cells[dir].classList.contains('wall') || pathHist.includes(dir) || cells[dir] === ghMvHis) {
-//       fscoredir = Infinity
-//     } else {
-//       fscoredir = hscore(dir)
-//     }
-//     return fscoredir
-//   }
-
-//   const up = current - width
-//   const down = current + width
-//   const left = current - 1
-//   const right = current + 1
-//   const fscoreUp = fscoreCalc(up)
-//   const fscoreDown = fscoreCalc(down)
-//   const fscoreLeft = fscoreCalc(left)
-//   const fscoreRight = fscoreCalc(right)
-
-//   // console.log('fscore up ' + fscoreUp)
-//   // console.log('fscore down ' + fscoreDown)
-//   // console.log('fscore left ' + fscoreLeft)
-//   // console.log('fscore right ' + fscoreRight)
-
-//   const ans = Math.min(fscoreUp, fscoreDown, fscoreLeft, fscoreRight)
-
-//   if (current === finish || ans === Infinity) {
-//     pathComplete = true
-//     //clearInterval(pathGen)
-//     console.log('target ' + finish)
-//     return pathHist
-//   }
-
-//   pathHist.push(current)
-
-//   if (fscoreUp === ans) current = up
-//   if (fscoreDown === ans) current = down
-//   if (fscoreLeft === ans) current = left
-//   if (fscoreRight === ans) current = right
-
-//   // console.log('loc moved to: ' + current)
-
-// }
-
-// let test
-
-// function generatePath(target) {
-//   while (!pathComplete) {
-//     test = fscore(target)
-//     console.log(test)
-//   }
-//   pathHist = []
-//   pathComplete = false
-// }
-
-// const pathGen = setInterval(function() {
-//   test = fscore(currentPos)
-//   console.log(test)
-// }, 1)
-
-//enemy AI behaviour 2 (roam)
-/**each ghost goes to a different roam location. AI takes concentration of player. */
-
-
-
-//enemy AI behaviour 3 (scared)
-/**use RNG to generate ghost behaviour. Travel direction will reverse the moment this is activated */
-
-
-
-//enemy AI behaviour 4 (eaten)
-/**head back to ghost box at speed. Fastest path to ghost box */
-
-//enemy movement
-
-
-//Condition logic for AIs to be acitve / inactive
-/**The longer the game goes on, the longer the AIs will stay on chase mode and the shorter they will go to roam.
-Top difficulty will be defined by player points held, this will cause chase mode to be on permenantly. */
+//Score update function
 function scoreUpdater() {
   const formatScore = score.toString().padStart(6, '0')
   document.querySelector('#scoreDisp').innerHTML = formatScore
 }
 
-//die animation
+
+
+//Die animation
 function dieAnimReload() {
   const img = document.createElement('img')
   img.src = '/assets/pmandie.gif?' + Math.random()
@@ -894,7 +683,8 @@ function dieAnimReload() {
 }
 
 
-//game over toggle
+
+//Game over toggle
 function showLose() {
   document.getElementById('gameOver').classList.remove('hide')
 }
@@ -903,7 +693,8 @@ function hideLose() {
 }
 
 
-//ready toggle
+
+//Ready toggle
 function showRdy() {
   document.getElementById('ready').classList.remove('hide')
 }
@@ -919,7 +710,8 @@ function rdy() {
 }
 
 
-//win toggle
+
+//Win toggle
 function showWin() {
   document.getElementById('win').classList.remove('hide')
 }
@@ -934,6 +726,8 @@ function win() {
   }, 2000)
 }
 
+
+
 //menu toggle
 function showMenu() {
   document.querySelector('.toggle').classList.remove('hide')
@@ -943,7 +737,8 @@ function hideMenu() {
 }
 
 
-//quit btn initilisation
+
+//Quit btn initilisation
 function hideQuitBtn() {
 
   document.querySelector('#quitBar .quit').classList.add('hide')
@@ -951,41 +746,41 @@ function hideQuitBtn() {
 function showQuitBtn() {
   document.querySelector('#quitBar .quit').classList.remove('hide')
 }
-  
+
+
 
 //Reset fruit
-function resetFruit() {
-  document.querySelector('#chry').style.visibility = 'hidden'
-  document.querySelector('#strb').style.visibility = 'hidden'
-  document.querySelector('#orng').style.visibility = 'hidden'
-  document.querySelector('#apple').style.visibility = 'hidden'
-}
+// function resetFruit() {
+//   document.querySelector('#chry').style.visibility = 'hidden'
+//   document.querySelector('#strb').style.visibility = 'hidden'
+//   document.querySelector('#orng').style.visibility = 'hidden'
+//   document.querySelector('#apple').style.visibility = 'hidden'
+// }
+
 
 
 //**Executions**
+
+
 
 //page load
 generateGrid()
 placeItems()
 addPlayer()
-resetFruit()
+// resetFruit()
 
-//console.log(ghostPos.Red)
 
 
 //**Events**
 
-//leaderboard button
-
 
 
 //Movment input
-
 document.addEventListener('keydown', dirPress)
 
 
-//start button
 
+//start button
 let i
 const startBtns = document.querySelectorAll('.start')
 i = 0
@@ -1001,8 +796,9 @@ for (i of startBtns) {
   })
 }
 
-// quit button
 
+
+// quit button
 const quitBtns = document.querySelectorAll('.quit')
 i = 0
 
