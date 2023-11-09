@@ -220,7 +220,7 @@ button {
 }
 
 .gameBoard div.powerUp {
-  background-image: url('/assets/powerup.png');
+  background-image: url('../assets/powerup.png');
 }
 
 
@@ -250,92 +250,92 @@ button {
 
 /*Red ghost sprites*/
 .gameBoard div.ghostRed {
-  background-image: url('/assets/bnkyleft.gif');
+  background-image: url('../assets/bnkyleft.gif');
 }
 
 .gameBoard div.gMvUpRed {
-  background-image: url('/assets/bnkyup.gif');
+  background-image: url('../assets/bnkyup.gif');
 }
 
 .gameBoard div.gMvDownRed {
-  background-image: url('/assets/bnkydown.gif');
+  background-image: url('../assets/bnkydown.gif');
 }
 
 .gameBoard div.gMvLeftRed {
-  background-image: url('/assets/bnkyleft.gif');
+  background-image: url('../assets/bnkyleft.gif');
 }
 
 .gameBoard div.gMvRightRed {
-  background-image: url('/assets/bnkyright.gif');
+  background-image: url('../assets/bnkyright.gif');
 }
 
 
 
 /*Blue ghost sprites*/
 .gameBoard div.ghostBlue {
-  background-image: url('/assets/inkyleft.gif');
+  background-image: url('../assets/inkyleft.gif');
 }
 
 .gameBoard div.gMvUpBlue {
-  background-image: url('/assets/inkyup.gif');
+  background-image: url('../assets/inkyup.gif');
 }
 
 .gameBoard div.gMvDownBlue {
-  background-image: url('/assets/inkydown.gif');
+  background-image: url('../assets/inkydown.gif');
 }
 
 .gameBoard div.gMvLeftBlue {
-  background-image: url('/assets/inkyleft.gif');
+  background-image: url('../assets/inkyleft.gif');
 }
 
 .gameBoard div.gMvRightBlue {
-  background-image: url('/assets/inkyright.gif');
+  background-image: url('../assets/inkyright.gif');
 }
 
 
 
 /*Pink ghost sprites*/
 .gameBoard div.ghostPink {
-  background-image: url('/assets/pnkyleft.gif');
+  background-image: url('../assets/pnkyleft.gif');
 }
 
 .gameBoard div.gMvUpPink {
-  background-image: url('/assets/pnkyup.gif');
+  background-image: url('../assets/pnkyup.gif');
 }
 
 .gameBoard div.gMvDownPink {
-  background-image: url('/assets/pnkydown.gif');
+  background-image: url('../assets/pnkydown.gif');
 }
 
 .gameBoard div.gMvLeftPink {
-  background-image: url('/assets/pnkyleft.gif');
+  background-image: url('../assets/pnkyleft.gif');
 }
 
 .gameBoard div.gMvRightPink {
-  background-image: url('/assets/pnkyright.gif');
+  background-image: url('../assets/pnkyright.gif');
 }
 
 
 
 /*Orange ghost sprites*/
 .gameBoard div.ghostOrange {
-  background-image: url('/assets/clydleft.gif');
+  background-image: url('../assets/clydleft.gif');
 }
 
 .gameBoard div.gMvUpOrange {
-  background-image: url('/assets/clydup.gif');
+  background-image: url('../assets/clydup.gif');
 }
 
 .gameBoard div.gMvDownOrange {
-  background-image: url('/assets/clyddown.gif');
+  background-image: url('../assets/clyddown.gif');
 }
 
 .gameBoard div.gMvLeftOrange {
-  background-image: url('/assets/clydleft.gif');
+  background-image: url('../assets/clydleft.gif');
 }
 
 .gameBoard div.gMvRightOrange {
-  background-image: url('/assets/clydright.gif');
+  background-image: url('../assets/clydright.gif');
 }
 
 
@@ -343,9 +343,9 @@ button {
 /*Ghost scared sprites*/
 
 .gameBoard div.ghScared {
-  background-image: url('/assets/ghostscared.gif');
+  background-image: url('../assets/ghostscared.gif');
 }
 
 .gameBoard div.ghScaredEnding {
-  background-image: url('/assets/ghostscaredtimer.gif');
+  background-image: url('../assets/ghostscaredtimer.gif');
 }
