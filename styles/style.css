@@ -230,28 +230,6 @@ button {
 
 
 
-/*Player sprites*/
-.gameBoard div.player {
-  background-image: url('../assets/pmanstatic.png');
-}
-
-.gameBoard div.pMvUp {
-  background-image: url('../assets/pmanup.gif');
-}
-
-.gameBoard div.pMvDown {
-  background-image: url('../assets/pmandown.gif');
-}
-
-.gameBoard div.pMvLeft {
-  background-image: url('../assets/pmanleft.gif');
-}
-
-.gameBoard div.pMvRight {
-  background-image: url('../assets/pmanright.gif');
-}
-
-
 
 /*Red ghost sprites*/
 .gameBoard div.ghostRed {
@@ -363,6 +341,25 @@ button {
   background-image: url('../assets/ghostscared.gif');
 }
 
-/* .gameBoard div.ghScaredEnding {
-  background-image: url('../assets/ghostscaredtimer.gif');
-} */
+
+
+/*Player sprites*/
+.gameBoard div.player {
+  background-image: url('../assets/pmanstatic.png');
+}
+
+.gameBoard div.pMvUp {
+  background-image: url('../assets/pmanup.gif');
+}
+
+.gameBoard div.pMvDown {
+  background-image: url('../assets/pmandown.gif');
+}
+
+.gameBoard div.pMvLeft {
+  background-image: url('../assets/pmanleft.gif');
+}
+
+.gameBoard div.pMvRight {
+  background-image: url('../assets/pmanright.gif');
+}

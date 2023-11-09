@@ -218,11 +218,10 @@ function startGame() {
         Orange: currentPos + 4 * width,
       }
 
-      ghostHitChk()
       scaredToggleChk()
       pickupChk('powerUp', 50)
       pickupChk('pellet', 10)
-      
+
       if (ghToggle.Red === true) {
         addGhost('Red')
         cells[180].classList.remove('gMvLeftRed')
@@ -281,6 +280,9 @@ function startGame() {
 
       playerMove()
       scoreUpdater()
+      setTimeout(function() {
+        ghostHitChk()
+      }, 250)
 
       ghostTargetVld('Red')
       ghostTargetVld('Blue')
@@ -387,6 +389,16 @@ function playerMove() {
 
 
 //Add ghosts to board and define anims
+
+function teleCheckGh(next) {
+  if (next === 209) {
+    next = 190
+  } else if (next === 189) {
+    next = 208
+  }
+  ghNextCell = next
+}
+
 function ghostMoveDecide(color) {
   if (ghostPath[color][1] === ghostPos[color] - width) {
     ghDir[color] = 'up'
@@ -448,8 +460,10 @@ function ghostMove(color) {
     ghNextCell = ghostPos[color] + width
   } else if (ghDir[color] === 'left') {
     ghNextCell = ghostPos[color] - 1
+    teleCheckGh(ghNextCell)
   } else if (ghDir[color] === 'right') {
     ghNextCell = ghostPos[color] + 1
+    teleCheckGh(ghNextCell)
   }
   
   ghostPos[color] = ghNextCell
@@ -513,7 +527,7 @@ function ghostHitChk() {
   else if (cells[currentPos].classList.contains('ghScaredBlue')) ghostEat('Blue')
   else if (cells[currentPos].classList.contains('ghScaredPink')) ghostEat('Pink')
   else if (cells[currentPos].classList.contains('ghScaredOrange')) ghostEat('Orange')
-  else if (cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
+  else if (cells[currentPos].classList.contains('player') && cells[currentPos].classList.contains('ghostRed') || cells[currentPos].classList.contains('ghostBlue') || cells[currentPos].classList.contains('ghostPink') || cells[currentPos].classList.contains('ghostOrange')) {
     ghostHit()
   }
 }
