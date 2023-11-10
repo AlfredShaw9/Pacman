@@ -90,9 +90,9 @@ const lastMv = {
   Orange: 0,
 }
 
+
+
 //**functions**
-
-
 
 //Generate grid
 function generateGrid() {
@@ -474,9 +474,7 @@ function ghostMove(color) {
 
 
 //player item pickup interaction
-/**remove pickup from board, add 10 to score for pellet.
-apply effect to enemies, switch enemy player interaction, reset timer from pickup
-if additional pickup is added during pickup duration, add 50 to score */
+//remove pickup from board, add 10 to score for pellet.
 function pickupChk(item, points) {
   if (cells[currentPos].classList.contains(`${item}`)){
     score += points
@@ -486,8 +484,7 @@ function pickupChk(item, points) {
       pickupCount = 0
       pickupTarget = 0
       //Win game
-      /**Check for all map pickup items and powerups to have been collected
-      Will call initialise game AND add all powerups and pickup items again. */
+      //Check for all map pickup items and powerups to have been collected
       win()
       setTimeout(function() {
       }, 500)
@@ -532,9 +529,6 @@ function ghostHitChk() {
   }
 }
 
-// function ghostEatChk() {
-
-// }
 
 
 /**INTERACTION 1
@@ -553,8 +547,7 @@ function ghostHit() {
       charReset()
       if (lives === 0) {
         //Lose game
-        /**Check logic for no lives left, get score and keep in local storage for leaderboard.
-        Reset game but dont start it. Bring up game over menu */
+        /**Check logic for no lives left. Reset game but dont start it. Bring up game over menu */
         showLose()
         scoreUpdater()
         document.getElementById('scorePrint').innerHTML = score
@@ -569,11 +562,7 @@ function ghostHit() {
 }
 
 /**INTERACTION 2
-IF enemy has switched states from the powerup, on player enemy collision, enemy will score is added
-Referance variable that will check for correct state AND current ammount of this kind of interaction
-This interaction count will be wiped at the end of the duration of the state.
-For certain interaction counts, the score value will increase to a maximum.
-After interaction, ghost state is changed again */
+IF enemy has switched states from the powerup, on player enemy collision, enemy score is added */
 function ghostEat(color) {
   removeGhost(color)
   removeGhostSprites(color)
@@ -586,10 +575,9 @@ function ghostEat(color) {
 }
 
 //enemy AI behaviour
-/**Possibility for unique ais for each ghost like real game
-Initial pathfinding is just path to player. Will implement 2 on fastest path and 2 on random path for functionality.
+/**Initial pathfinding is just path to player and targets set around.
 /**EXTRA EXTRA EXTRA */
-/**Pathfinding takes locations based on player and other enemy location */
+/**Pathfinding takes locations based on player and other enemy location. Dynamic changing targets to add if i have time*/
 
 //Main Pathfinding AI
 let pathHist = []
